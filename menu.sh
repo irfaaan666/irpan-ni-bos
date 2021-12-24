@@ -11,6 +11,17 @@ or='\033[1;33m'
 bd='\e[1m'
 nc='\e[0m'
 
+ISP=$(curl -s ipinfo.io/org | cut -d " " -f 2-10 )
+CITY=$(curl -s ipinfo.io/city )
+WKT=$(curl -s ipinfo.io/timezone )
+IPVPS=$(curl -s ipinfo.io/ip )
+	cname=$( awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo )
+	cores=$( awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo )
+	freq=$( awk -F: ' /cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo )
+	tram=$( free -m | awk 'NR==2 {print $2}' )
+	swap=$( free -m | awk 'NR==4 {print $2}' )
+	up=$(uptime|awk '{ $1=$2=$(NF-6)=$(NF-5)=$(NF-4)=$(NF-3)=$(NF-2)=$(NF-1)=$NF=""; print }')
+
 clear 
 echo -e  "  ╔════════════════════════════════════════════════════════════╗" 
 echo -e  "  ║                    |\_ __ _____ ___ /|                     ║"
@@ -21,15 +32,15 @@ echo -e  "  ╠═════════════════════�
 echo -e  "  ║                         ${rd} VPS INFO ${nc}                         ║" 
 echo -e  "  ╠════════════════════════════════════════════════════════════╝" 
 echo -e  "  ║ " 
-echo -e  "  ║    \e[32;1mCPU Model:\e[0m $cname  "
-echo -e  "  ║    \e[32;1mNumber Of Cores:\e[0m $cores"
-echo -e  "  ║    \e[32;1mCPU Frequency:\e[0m $freq MHz"
-echo -e  "  ║    \e[32;1mTotal Amount Of RAM:\e[0m $tram MB"
-echo -e  "  ║    \e[32;1mSystem Uptime:\e[0m $up"
-echo -e  "  ║    \e[32;1mIsp Name:\e[0m $ISP"
-echo -e  "  ║    \e[32;1mIp Vps:\e[0m $IPVPS"
-echo -e  "  ║    \e[32;1mCity:\e[0m $CITY"
-echo -e  "  ║    \e[32;1mTime:\e[0m $WKT"
+echo -e  "  ║   \e[32;1mCPU Model:\e[0m $cname  "
+echo -e  "  ║   \e[32;1mNumber Of Cores:\e[0m $cores"
+echo -e  "  ║   \e[32;1mCPU Frequency:\e[0m $freq MHz"
+echo -e  "  ║   \e[32;1mTotal Amount Of RAM:\e[0m $tram MB"
+echo -e  "  ║   \e[32;1mSystem Uptime:\e[0m $up"
+echo -e  "  ║   \e[32;1mIsp Name:\e[0m $ISP"
+echo -e  "  ║   \e[32;1mIp Vps:\e[0m $IPVPS"
+echo -e  "  ║   \e[32;1mCity:\e[0m $CITY"
+echo -e  "  ║   \e[32;1mTime:\e[0m $WKT"
 echo -e  "  ║ " 
 echo -e  "  ╠════════════════════════════════════════════════════════════╗" 
 echo -e  "  ║                      ${rd}  MENU OPTIONS${nc}                        ║" 
@@ -63,9 +74,10 @@ echo -e  "  ║     [ 20 ] Reboot VPS"
 echo -e  "  ║     [ 21 ] Speedtest VPS" 
 echo -e  "  ║     [ 22 ] Information Display System"
 echo -e  "  ║     [ 23 ] About AutoScriptVpn"
-echo -e  "  ║     [ 24 ] Restart all service"
-echo -e  "  ║     [ 25 ] Clear log"
-echo -e  "  ║     [ 26 ] Change banner SSH"
+echo -e  "  ║     [ 24 ] Service status"
+echo -e  "  ║     [ 25 ] Restart all service"
+echo -e  "  ║     [ 26 ] Clear log"
+echo -e  "  ║     [ 27 ] Change banner SSH"
 echo -e  "  ║     "
 echo -e  "  ║     [ X ] Exit" 
 echo -e  "  ╠════════════════════════════════════════════════════════════╗" 
@@ -76,7 +88,7 @@ read -p  "           Select From Options :  " menu
 echo -e  "\e[0m"
 case $menu in
 1)
-menu-ssh.sh
+menu-ssh
 ;;
 2)
 menu-wg
@@ -100,57 +112,79 @@ menu-vless
 menu-trojan
 ;;
 9)
+clear
 add-host
 ;;
 10)
+clear
 change-port
 ;;
 11)
+clear
 certv2ray
 ;;
 12)
+clear
 bbr
 ;;
 13)
+clear
 cff
 ;;
 14)
+clear
 cfd
 ;;
 15)
+clear
 cfh
 ;;
 16)
+clear
 wbmn
 ;;
 17)
+clear
 limit-speed
 ;;
 18)
+clear
 vnstat
 ;;
 19)
+clear
 ram
 ;;
 20)
+clear
 reboot
 ;;
 21)
+clear
 speedtest
 ;;
 22)
+clear
 info
 ;;
 23)
+clear
 about
 ;;
 24)
-restart
+clear
+service-status
 ;;
 25)
-clear-log
+clear
+restart
 ;;
 26)
+clear
+clear-log
+;;
+27)
+clear
 echo -e "\e[1;32m"
 echo -e "$nc Command Key untuk save Banner baru Anda Press Key\e[0m :"     
 echo -e " \e[1;31m[ CTRL + X ] [ ENTER ] [ Enter ]\e[0m \e[1;32m${nc}Untuk Simpan"
